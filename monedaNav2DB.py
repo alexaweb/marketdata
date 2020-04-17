@@ -69,6 +69,7 @@ choices = {'Pionero':'CFIPIONERO.SN','Moneda Latinoamérica Deuda Local (Serie A
 midnight = datetime.combine(datetime.today(), time.min)
 yesterday=midnight-timedelta(days=1)
 print("yesterday:",yesterday)
+insertdate = yesterday
 #print(midnight)
 for i in range(row_marker):
     fund_name=new_table[0][i].strip()
@@ -78,11 +79,11 @@ for i in range(row_marker):
     print("Fondo:",fund_name,"; Moneda:",currency,";Valor Cuota:",value)
     ticker=choices.get(fund_name,0)
     if ticker != 0:
-        print("yes:",value,midnight)
-        q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency",currency).field("nav",value).time(yesterday)
+        print("yes:",value,insertdate,currency)
+        q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency",currency).field("nav",value).time(insertdate)
         writePriceToDb(q,bucket,org,config.url,config.token)
         if currency == "USD" and is_number(usd_obs):
             value=value*usd_obs
-            print("value clp:",value,"date:",midnight)
-            q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency","CLP").field("nav",value).time(yesterday)
+            print("value clp:",value,"date:",insertdate)
+            q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency","CLP").field("nav",value).time(insertdate)
             writePriceToDb(q,bucket,org,config.url,config.token)
