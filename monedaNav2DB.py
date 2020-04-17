@@ -1,6 +1,6 @@
 # Standard library imports
 import argparse
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 import pandas as pd
@@ -33,7 +33,8 @@ org = args.o
 d = getcurrencies()
 usd_obs = d['usd_obs']
 
-url = 'https://www.moneda.cl/private/valores-cuota'
+#url = 'https://www.moneda.cl/private/valores-cuota'
+url = 'https://www.moneda.cl/?switch=private'
 page = requests.get(url)
 soup = BeautifulSoup(page.content,'html.parser')
 results = soup.find(id='tab-1')
@@ -66,6 +67,8 @@ choices = {'Pionero':'CFIPIONERO.SN','Moneda Latinoamérica Deuda Local (Serie A
 #print(new_table)
 #print(d.items())
 midnight = datetime.combine(datetime.today(), time.min)
+yesterday=midnight-timedelta(days=1)
+print("yesterday:",yesterday)
 #print(midnight)
 for i in range(row_marker):
     fund_name=new_table[0][i].strip()
@@ -76,10 +79,10 @@ for i in range(row_marker):
     ticker=choices.get(fund_name,0)
     if ticker != 0:
         print("yes:",value,midnight)
-        q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency",currency).field("nav",value).time(midnight)
+        q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency",currency).field("nav",value).time(yesterday)
         writePriceToDb(q,bucket,org,config.url,config.token)
         if currency == "USD" and is_number(usd_obs):
             value=value*usd_obs
             print("value clp:",value,"date:",midnight)
-            q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency","CLP").field("nav",value).time(midnight)
+            q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency","CLP").field("nav",value).time(yesterday)
             writePriceToDb(q,bucket,org,config.url,config.token)
