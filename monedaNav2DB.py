@@ -1,8 +1,10 @@
 # Standard library imports
 import argparse
 from datetime import datetime, time, timedelta
+from datetime import datetime as dt
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
+import locale
 import pandas as pd
 import re
 import requests
@@ -27,8 +29,6 @@ args = parser.parse_args()
 bucket = args.b
 org = args.o
 
-#bucket="testbucket"
-#org="testorg"
 
 d = getcurrencies()
 usd_obs = d['usd_obs']
@@ -39,6 +39,15 @@ page = requests.get(url)
 soup = BeautifulSoup(page.content,'html.parser')
 results = soup.find(id='tab-1')
 
+pattern_date = re.compile(r"\((.+)\)")
+#pattern_date = re.compile(r"\((\d+) de (\s+) (\d\d\d\d)")
+search_result_date=pattern_date.search(str(results))
+fechaweb=search_result_date.group(1)
+print("fecha web:", fechaweb)
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+dateweb = dt.strptime(fechaweb,'%d de %B %Y')
+insertdate = dateweb.strftime('%Y-%m-%d')
+print("fecha convertida:",insertdate)
 
 fundticker_list = ['CFIPIONERO.SN','CFIMLDL.SN','CFIMRCLP']
 fundname_list = ['Pionero','Moneda Latinoamérica Deuda Local (Serie A)','Moneda Renta CLP']
@@ -68,8 +77,8 @@ choices = {'Pionero':'CFIPIONERO.SN','Moneda Latinoamérica Deuda Local (Serie A
 #print(d.items())
 midnight = datetime.combine(datetime.today(), time.min)
 yesterday=midnight-timedelta(days=1)
-print("yesterday:",yesterday)
-insertdate = yesterday
+#print("yesterday:",yesterday)
+#insertdate = yesterday
 #print(midnight)
 for i in range(row_marker):
     fund_name=new_table[0][i].strip()
@@ -78,6 +87,10 @@ for i in range(row_marker):
     value=float((test_string[3:].replace(".","")).strip().replace(",","."))
     print("Fondo:",fund_name,"; Moneda:",currency,";Valor Cuota:",value)
     ticker=choices.get(fund_name,0)
+##DEBUG
+#    print(new_table)
+##DEBUG
+#    exit()
     if ticker != 0:
         print("yes:",value,insertdate,currency)
         q = influxdb_client.Point("price").tag("ticker",ticker).tag("name",fund_name).tag("currency",currency).field("nav",value).time(insertdate)
