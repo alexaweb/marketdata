@@ -32,8 +32,9 @@ def readFromDB(string,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
     query = 'from(bucket:"'+bucket+'")\
-    |> range(start: -10d)\
-    |> filter(fn:(r) => r.ticker == "'+string+'")'
+    |> range(start: -366d)\
+    |> filter(fn:(r) => r.ticker == "'+string+'")\
+    |> filter(fn:(r) => r._field == "close")'
     ## Using Table Structure
     print(query)
     result = query_api.query(org=org, query=query)
