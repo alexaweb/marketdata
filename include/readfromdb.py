@@ -15,13 +15,25 @@ def writePriceToDb(string,bucket,org,url,token):
     write_api.write(bucket=bucket, org=org, record=string)
 
 
-def readFromDB(string,bucket,org,url,token):
+def readFromDBworks(string,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
     query = 'from(bucket:"market")\
     |> range(start: -10d)'
-#--|> filter(fn(r) => r._ticker = string)
-#|> filter(fn(r) => r.price=close)'
+    ## Using Table Structure
+    result = query_api.query(org=org, query=query)
+    results = []
+
+    for table in result:
+        for record in table.records:
+            print (record.values)
+
+def readFromDB(string,bucket,org,url,token):
+    client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
+    query_api = client.query_api()
+    query = 'from(bucket:"market")\
+    |> range(start: -10d)\
+    |> filter(fn:(r) => r.ticker == string)'
     ## Using Table Structure
     result = query_api.query(org=org, query=query)
     results = []
