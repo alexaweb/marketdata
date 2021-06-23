@@ -19,9 +19,9 @@ def readFromDB(string,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
     query = 'from(bucket:bucket)\
-    |> range(start: -10d)\
-    |> filter(fn(r) => r._ticker = string)
-    |> filter(fn(r) => r.price=close)'
+    |> range(start: -10d)'
+#--|> filter(fn(r) => r._ticker = string)
+#|> filter(fn(r) => r.price=close)'
     ## Using Table Structure
     result = query_api.query(org=org, query=query)
     results = []
