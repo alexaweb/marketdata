@@ -33,7 +33,7 @@ def readFromDB(string,bucket,org,url,token):
     query_api = client.query_api()
     query = 'from(bucket:"market")\
     |> range(start: -10d)\
-    |> filter(fn:(r) => r.ticker == string)'
+    |> filter(fn:(r) => r.ticker == "'+string+'")'
     ## Using Table Structure
     print(query)
     result = query_api.query(org=org, query=query)
