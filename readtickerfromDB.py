@@ -12,7 +12,7 @@ import argparse
 # Local application imports
 import config
 ##from include.finance import getTickerPrice
-from include.readfromdb import readfromDB
+from include.readfromdb import readFromDB
 
 parser = argparse.ArgumentParser(description='NOTE: arguments required')
 parser.add_argument("--f", required=True, type=str,help="text filename with ticker symbols, one per line be supplied")
