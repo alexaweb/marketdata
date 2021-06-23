@@ -27,7 +27,7 @@ org = args.o
 #org = "testorg"
 
 
-readFromDBworks("MRCLP",bucket,org,config.url,config.token)
+#readFromDBworks("MRCLP",bucket,org,config.url,config.token)
 
 readFromDB("AAPL",bucket,org,config.url,config.token)
         
