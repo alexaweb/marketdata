@@ -35,6 +35,7 @@ def readFromDB(string,bucket,org,url,token):
     |> range(start: -10d)\
     |> filter(fn:(r) => r.ticker == string)'
     ## Using Table Structure
+    print(query)
     result = query_api.query(org=org, query=query)
     results = []
 
