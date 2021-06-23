@@ -1,4 +1,4 @@
-# ticker2DB.py
+# readtickerfrom2DB.py
 #
 # input: filename bucket organization
 # output: reads ticker symbols from filename and
@@ -11,8 +11,8 @@ import argparse
 
 # Local application imports
 import config
-from include.finance import getTickerPrice
-from include.writetodb import writePriceToDb
+##from include.finance import getTickerPrice
+from include.readfromdb import readfromDB
 
 parser = argparse.ArgumentParser(description='NOTE: arguments required')
 parser.add_argument("--f", required=True, type=str,help="text filename with ticker symbols, one per line be supplied")
@@ -26,14 +26,6 @@ org = args.o
 #bucket = "testbucket"
 #org = "testorg"
 
-f=open(filename,'r')
-while True:
-    x=f.readline()
-    if len(x.strip()) > 0:
-        q = getTickerPrice(x.strip())
-        if q is not None:
-            print(q)
-            writePriceToDb(q,bucket,org,config.url,config.token)
-    else:
-        exit()
+
+readFromDB("MRCLP",bucket,org,config.url,config.token)
         
