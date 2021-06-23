@@ -18,7 +18,7 @@ def writePriceToDb(string,bucket,org,url,token):
 def readFromDB(string,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
-    query = 'from(bucket:bucket)\
+    query = 'from(bucket:"market")\
     |> range(start: -10d)'
 #--|> filter(fn(r) => r._ticker = string)
 #|> filter(fn(r) => r.price=close)'
