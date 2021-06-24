@@ -33,7 +33,7 @@ org = args.o
 
 #readFromDBworks("MRCLP",bucket,org,config.url,config.token)
 
-data = readFromDB(15,bucket,org,config.url,config.token)
+data = readFromDB(366,bucket,org,config.url,config.token)
 
 print(data)
 df = pd.DataFrame(data,columns =['fecha','ticker','valor','close'])
