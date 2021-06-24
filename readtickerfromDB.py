@@ -29,5 +29,5 @@ org = args.o
 
 #readFromDBworks("MRCLP",bucket,org,config.url,config.token)
 
-readFromDB(5,bucket,org,config.url,config.token)
+readFromDB(15,bucket,org,config.url,config.token)
         
