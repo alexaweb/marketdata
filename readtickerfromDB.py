@@ -1,11 +1,13 @@
 # readtickerfrom2DB.py
 #
-# input: filename bucket organization
-# output: reads ticker symbols from filename and
-#         writes ticker value (yahoo finance) to influxDB (bucket and organization)
+# input: bucket and organization
+# output: reads ticker values for 366 days past and writes to google sheet
 #########################################
 # Standard library imports
 import argparse
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # Third party imports
 
@@ -29,5 +31,15 @@ org = args.o
 
 #readFromDBworks("MRCLP",bucket,org,config.url,config.token)
 
-readFromDB(15,bucket,org,config.url,config.token)
-        
+data = readFromDB(15,bucket,org,config.url,config.token)
+
+
+scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('/home/acelle/apps/cobs/client_secret_interpetrol.json', scope)
+client = gspread.authorize(creds)
+file_id = '1p62PeXYqs2rLbs7BlpsLWzLeq2zHWbfWZlXedDlz_mQ'
+
+ws = client.open_by_key(file_id)
+sh = ws.worksheet("GRAFANA")
+sh.clear()
+set_with_dataframe(sh,data)        
