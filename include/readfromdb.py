@@ -60,5 +60,5 @@ def readFromDB(days,bucket,org,url,token):
             results.append((record.get_time().strftime('%Y-%m-%d'), record.values.get("ticker"),record.get_field(),record.get_value()))
     
     
-    print(results)
+#   print(results)
     return results

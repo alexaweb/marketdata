@@ -34,7 +34,7 @@ org = args.o
 
 data = readFromDB(15,bucket,org,config.url,config.token)
 
-
+print(data)
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('/home/ubuntu/apps/marketdata/client_secret_interpetrol.json', scope)
 client = gspread.authorize(creds)
