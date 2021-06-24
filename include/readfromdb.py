@@ -44,11 +44,11 @@ def readtickerFromDB(string,bucket,org,url,token):
         for record in table.records:
             print (record.values)
 
-def readFromDB(string,bucket,org,url,token):
+def readFromDB(days,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
     query = 'from(bucket:"'+bucket+'")\
-    |> range(start: -3d)\
+    |> range(start: -'+days+'d)\
     |> filter(fn:(r) => r._field == "close")'
     ## Using Table Structure
     print(query)
