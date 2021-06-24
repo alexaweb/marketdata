@@ -57,4 +57,6 @@ def readFromDB(days,bucket,org,url,token):
 
     for table in result:
         for record in table.records:
-            print (record.values)
+            results.append((record.get_field(),record.get_value()))
+
+    print(results)
