@@ -48,7 +48,7 @@ def readFromDB(days,bucket,org,url,token):
     client = influxdb_client.InfluxDBClient(url=url, token=token, org=org) 
     query_api = client.query_api()
     query = 'from(bucket:"'+bucket+'")\
-    |> range(start: -'+days+'d)\
+    |> range(start: -'+str(days)+'d)\
     |> filter(fn:(r) => r._field == "close")'
     ## Using Table Structure
     print(query)
