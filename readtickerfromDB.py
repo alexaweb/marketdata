@@ -35,7 +35,7 @@ data = readFromDB(15,bucket,org,config.url,config.token)
 
 
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('/home/acelle/apps/cobs/client_secret_interpetrol.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name('/home/ubuntu/apps/marketdata/client_secret_interpetrol.json', scope)
 client = gspread.authorize(creds)
 file_id = '1p62PeXYqs2rLbs7BlpsLWzLeq2zHWbfWZlXedDlz_mQ'
 
