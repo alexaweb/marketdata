@@ -9,6 +9,7 @@ import argparse
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import get_as_dataframe, set_with_dataframe
+import pandas as pd
 
 # Third party imports
 
@@ -35,12 +36,17 @@ org = args.o
 data = readFromDB(15,bucket,org,config.url,config.token)
 
 print(data)
+df = pd.DataFrame(data,columns =['fecha','ticker','valor','close'])
+
+
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('/home/ubuntu/apps/marketdata/client_secret_interpetrol.json', scope)
 client = gspread.authorize(creds)
 file_id = '1p62PeXYqs2rLbs7BlpsLWzLeq2zHWbfWZlXedDlz_mQ'
 
+
+
 ws = client.open_by_key(file_id)
 sh = ws.worksheet("GRAFANA")
 sh.clear()
-set_with_dataframe(sh,data)        
+set_with_dataframe(sh,df)        
